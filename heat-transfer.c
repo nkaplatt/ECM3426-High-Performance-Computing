@@ -35,7 +35,7 @@ int main() {
         );
 
         // formular (5)
-        tempValues[i-1][j-1] = tempValues[i-1][j-1] + rateOfChange * timestep;
+        tempValues[i-1][j-1] += tempValues[i-1][j-1] + rateOfChange * timestep;
       }
     }
   }
