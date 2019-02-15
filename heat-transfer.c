@@ -10,8 +10,10 @@ int main() {
   // initial temperature landscape
   FILE *outfile;
   outfile=fopen("heat-transfer-init.dat","w");
-  for (int i = 0; i < axis; i++) {
-    for (int j = 0; j < axis; j++) {
+  int i;
+  int j;
+  for (i = 0; i < axis; i++) {
+    for (j = 0; j < axis; j++) {
       if (150 <= j && j <= 350 && 150 <= i && i <= 350) {
         tempValues[i][j] = 50.0;
       } else {
@@ -23,9 +25,10 @@ int main() {
   fclose(outfile);
 
   // formula (4)
-  for(int x = 0; x < 10000; x++) {
-    for (int i = 1; i < axis; i++) {
-      for (int j = 1; j < axis; j++) {
+  int x;
+  for(x = 0; x < 10000; x++) {
+    for (i = 1; i < axis; i++) {
+      for (j = 1; j < axis; j++) {
         float rateOfChange = alphasqrd * (
           (tempValues[i+1][j] - 2 * tempValues[i][j] + tempValues[i-1][j]) / 0.0002 * 0.0002 + 
           (tempValues[i][j+1] - 2 * tempValues[i][j] + tempValues[i][j-1]) / 0.0002 * 0.0002
@@ -39,8 +42,8 @@ int main() {
 
   FILE *resultfile;
   resultfile=fopen("heat-transfer-result.dat","w");
-  for (int i = 0; i < axis; i++) {
-    for (int j = 0; j < axis; j++) {
+  for (i = 0; i < axis; i++) {
+    for (j = 0; j < axis; j++) {
       fprintf(resultfile,"%f %f %f\n", i * 0.0002, j * 0.0002, tempValues[i][j]);
     }
   }
