@@ -26,18 +26,23 @@ int main() {
 
   // formula (4)
   int x;
+  float rateOfChange[500][500];
   for(x = 0; x < 10000; x++) {
     for (i = 1; i < axis; i++) {
       for (j = 1; j < axis; j++) {
-        float rateOfChange = alphasqrd * (
+        rateOfChange[i-1][j-1] = alphasqrd * (
           (tempValues[i+1][j] - 2 * tempValues[i][j] + tempValues[i-1][j]) / 0.0002 * 0.0002 + 
           (tempValues[i][j+1] - 2 * tempValues[i][j] + tempValues[i][j-1]) / 0.0002 * 0.0002
         );
-
-        // formular (5)
-        tempValues[i-1][j-1] += tempValues[i-1][j-1] + rateOfChange * timestep;
       }
     }
+
+    for (i = 0; i < axis; i++) {
+      for (j = 0; j < axis; j++) {
+        // formular (5)
+        tempValues[i-1][j-1] = tempValues[i-1][j-1] + rateOfChange[i][j] * timestep;
+      }
+    }    
   }
 
   FILE *resultfile;
