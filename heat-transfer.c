@@ -28,19 +28,19 @@ int main() {
   int x;
   float rateOfChange[500][500];
   for(x = 0; x < 10000; x++) {
-    for (i = 1; i < axis; i++) {
-      for (j = 1; j < axis; j++) {
-        rateOfChange[i-1][j-1] = alphasqrd * (
+    for (i = 1; i < axis-1; i++) {
+      for (j = 1; j < axis-1; j++) {
+        rateOfChange[i][j] = alphasqrd * (
           (tempValues[i+1][j] - 2 * tempValues[i][j] + tempValues[i-1][j]) / 0.0002 * 0.0002 + 
           (tempValues[i][j+1] - 2 * tempValues[i][j] + tempValues[i][j-1]) / 0.0002 * 0.0002
         );
       }
     }
 
-    for (i = 0; i < axis; i++) {
-      for (j = 0; j < axis; j++) {
+    for (i = 1; i < axis-1; i++) {
+      for (j = 1; j < axis-1; j++) {
         // formular (5)
-        tempValues[i-1][j-1] = tempValues[i-1][j-1] + rateOfChange[i][j] * timestep;
+        tempValues[i][j] = tempValues[i][j] + rateOfChange[i][j] * timestep;
       }
     }    
   }
