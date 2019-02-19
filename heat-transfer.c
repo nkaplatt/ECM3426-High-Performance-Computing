@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <omp.h>
+
 #define AXISINTERVAL 500
 #define DELETATIME 0.0000009
 #define ALPHASQRD 0.01
@@ -14,8 +16,10 @@ int main() {
   outfile=fopen("heat-transfer-init.dat","w");
   int i;
   int j;
+  #pragma omp parallel for shared(AXISINTERVAL, tempValues[], DELTAXY) private(i, j)
   for (i = 0; i < AXISINTERVAL; i++) {
     for (j = 0; j < AXISINTERVAL; j++) {
+      printf("thread %d of %d", omp_get_thread_num(), omp_get_num_threads());
       if (150 <= j && j <= 350 && 150 <= i && i <= 350) {
         tempValues[i][j] = 50.0;
       } else {
