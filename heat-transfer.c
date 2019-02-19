@@ -1,19 +1,27 @@
 #include <stdio.h>
-#define AXISINTERVAL 500
-#define DELETATIME 0.0000009
-#define ALPHASQRD 0.01
-#define TIMESTEPS 10000
-#define DELTAXY 0.0002
+#include <omp.h>
+#include <time.h>
 
 int main() {
   // 2D array
+  int AXISINTERVAL = 500;
+  double DELETATIME = 0.0000009;
+  float ALPHASQRD = 0.01;
+  int TIMESTEPS = 10000;
+  float DELTAXY = 0.0002;
   double tempValues[AXISINTERVAL][AXISINTERVAL];
 
   // initial temperature landscape
-  FILE *outfile;
-  outfile=fopen("heat-transfer-init.dat","w");
   int i;
   int j;
+  #ifdef _OPENMP
+    omp_set_num_threads(4);
+    double start_t = omp_get_wtime();
+  #else
+    double start_t = clock();
+  #endif
+
+  #pragma omp parallel for private(i, j)
   for (i = 0; i < AXISINTERVAL; i++) {
     for (j = 0; j < AXISINTERVAL; j++) {
       if (150 <= j && j <= 350 && 150 <= i && i <= 350) {
@@ -21,6 +29,19 @@ int main() {
       } else {
         tempValues[i][j] = 20.0;
       }
+    }
+  }
+
+  #ifdef _OPENMP
+    printf("Time spent: %f\n", omp_get_wtime() - start_t);
+  #else
+    printf("Time spent: %f\n", clock() - start_t);
+  #endif
+
+  FILE *outfile;
+  outfile=fopen("heat-transfer-init.dat","w");
+  for (i = 0; i < AXISINTERVAL; i++) {
+    for (j = 0; j < AXISINTERVAL; j++) {
       fprintf(outfile,"%f %f %f\n", i * DELTAXY, j * DELTAXY, tempValues[i][j]);
     }
   }
@@ -29,7 +50,15 @@ int main() {
   FILE *testfile;
   double rateOfChange[AXISINTERVAL][AXISINTERVAL];
   int x;
+  #ifdef _OPENMP
+    omp_set_num_threads(4);
+    start_t = omp_get_wtime();
+  #else
+    start_t = clock();
+  #endif
+
   for(x = 0; x < TIMESTEPS; x++) {
+    #pragma omp parallel for private(i, j)
     for (i = 1; i < AXISINTERVAL-1; i++) {
       for (j = 1; j < AXISINTERVAL-1; j++) {
         // formula (4)
@@ -39,7 +68,7 @@ int main() {
         );
       }
     }
-
+    #pragma omp parallel for private(i, j)
     for (i = 1; i < AXISINTERVAL; i++) {
       for (j = 1; j < AXISINTERVAL; j++) {
         // formular (5)
@@ -47,6 +76,12 @@ int main() {
       }
     }
   }
+
+  #ifdef _OPENMP
+    printf("Time spent: %f\n", omp_get_wtime() - start_t);
+  #else
+    printf("Time spent: %f\n", clock() - start_t);
+  #endif
 
   FILE *resultfile;
   resultfile=fopen("heat-transfer-result.dat","w");
