@@ -13,7 +13,7 @@
 #PBS -A Research_Project-IscaTraining
 
 # Set the number of OpenMP threads to use
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=16
 
 # Change into the directory the job was submitted from
 cd ${PBS_O_WORKDIR}
