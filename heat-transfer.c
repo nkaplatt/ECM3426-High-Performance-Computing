@@ -11,7 +11,6 @@ int main() {
   float DELTAXY = 0.0002;
   double tempValues[AXISINTERVAL][AXISINTERVAL];
 
-  // omp_set_num_threads(4);
   // initial temperature landscape
   int i;
   int j;
