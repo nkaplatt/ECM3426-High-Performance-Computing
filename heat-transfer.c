@@ -11,15 +11,7 @@ int main() {
   float DELTAXY = 0.0002;
   double tempValues[AXISINTERVAL][AXISINTERVAL];
 
-  omp_set_num_threads(2);
-  int sum = 0;
-  int b = 0;
-  #pragma omp parallel for default(none) shared(sum) private(b)
-  for (b = 0; b < 50; b++) {
-    sum += b;
-  }
-  printf("%i", sum);
-
+  // omp_set_num_threads(4);
   // initial temperature landscape
   int i;
   int j;
@@ -32,7 +24,6 @@ int main() {
 
   #pragma omp parallel for private(i, j)
   for (i = 0; i < AXISINTERVAL; i++) {
-    printf("thread num %d", omp_get_thread_num());
     for (j = 0; j < AXISINTERVAL; j++) {
       if (150 <= j && j <= 350 && 150 <= i && i <= 350) {
         tempValues[i][j] = 50.0;
@@ -42,11 +33,11 @@ int main() {
     }
   }
 
-  #ifdef _OPENMP
-    printf("Time spent: %f\n", omp_get_wtime() - start_t);
-  #else
-    printf("Time spent: %f\n", clock() - start_t);
-  #endif
+  // #ifdef _OPENMP
+  //   printf("Time spent: %f\n", omp_get_wtime() - start_t);
+  // #else
+  //   printf("Time spent: %f\n", clock() - start_t);
+  // #endif
 
   FILE *outfile;
   outfile=fopen("heat-transfer-init.dat","w");
@@ -60,12 +51,12 @@ int main() {
   FILE *testfile;
   double rateOfChange[AXISINTERVAL][AXISINTERVAL];
   int x;
-  #ifdef _OPENMP
-    omp_set_num_threads(4);
-    start_t = omp_get_wtime();
-  #else
-    start_t = clock();
-  #endif
+  // #ifdef _OPENMP
+  //   omp_set_num_threads(4);
+  //   start_t = omp_get_wtime();
+  // #else
+  //   start_t = clock();
+  // #endif
 
   for(x = 0; x < TIMESTEPS; x++) {
     #pragma omp parallel for private(i, j)
@@ -90,7 +81,7 @@ int main() {
   #ifdef _OPENMP
     printf("Time spent: %f\n", omp_get_wtime() - start_t);
   #else
-    printf("Time spent: %f\n", clock() - start_t);
+    printf("Time spent: %f\n", (clock() - start_t) / CLOCKS_PER_SEC);
   #endif
 
   FILE *resultfile;
