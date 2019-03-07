@@ -15,7 +15,6 @@ int main() {
   int i;
   int j;
   #ifdef _OPENMP
-    omp_set_num_threads(4);
     double start_t = omp_get_wtime();
   #else
     double start_t = clock();
@@ -51,7 +50,6 @@ int main() {
   double rateOfChange[AXISINTERVAL][AXISINTERVAL];
   int x;
   // #ifdef _OPENMP
-  //   omp_set_num_threads(4);
   //   start_t = omp_get_wtime();
   // #else
   //   start_t = clock();
