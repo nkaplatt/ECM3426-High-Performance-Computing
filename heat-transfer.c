@@ -31,11 +31,11 @@ int main() {
     }
   }
 
-  // #ifdef _OPENMP
-  //   printf("Time spent: %f\n", omp_get_wtime() - start_t);
-  // #else
-  //   printf("Time spent: %f\n", clock() - start_t);
-  // #endif
+  #ifdef _OPENMP
+    printf("Time spent: %f\n", omp_get_wtime() - start_t);
+  #else
+    printf("Time spent: %f\n", clock() - start_t);
+  #endif
 
   FILE *outfile;
   outfile=fopen("heat-transfer-init.dat","w");
@@ -49,11 +49,11 @@ int main() {
   FILE *testfile;
   double rateOfChange[AXISINTERVAL][AXISINTERVAL];
   int x;
-  // #ifdef _OPENMP
-  //   start_t = omp_get_wtime();
-  // #else
-  //   start_t = clock();
-  // #endif
+  #ifdef _OPENMP
+    start_t = omp_get_wtime();
+  #else
+    start_t = clock();
+  #endif
 
   for(x = 0; x < TIMESTEPS; x++) {
     #pragma omp parallel for private(i, j)
